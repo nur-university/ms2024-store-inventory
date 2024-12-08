@@ -27,4 +27,16 @@ public class User : AggregateRoot
         }
         return new User(id, fullname);
     }
+
+    public void Update(string fullname)
+    {
+        if (string.IsNullOrEmpty(fullname))
+        {
+            throw new ArgumentException("fullname cannot be null or empty", nameof(fullname));
+        }
+        FullName = fullname;
+    }
+
+    //Need for EF Core
+    private User() : base() { }
 }

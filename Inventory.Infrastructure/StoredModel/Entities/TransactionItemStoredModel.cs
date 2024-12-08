@@ -21,7 +21,7 @@ namespace Inventory.Infrastructure.StoredModel.Entities
         public ItemStoredModel Item { get; set; }
 
 
-        [[Required]
+        [Required]
         [Column("transactionId")]
         public Guid TransactionId { get; set; }
         public TransactionStoredModel Transaction { get; set; }

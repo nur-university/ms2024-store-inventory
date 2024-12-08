@@ -36,6 +36,9 @@ namespace Inventory.Infrastructure.DomainModel.Config
                 .HasConversion(converter)
                 .HasColumnName("unitaryCost");
 
+            builder.Ignore("_domainEvents");
+            builder.Ignore(x => x.DomainEvents);
+
         }
     }
 }

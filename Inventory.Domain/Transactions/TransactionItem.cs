@@ -30,4 +30,7 @@ public class TransactionItem : Entity
         UnitaryCost = unitaryCost;
         SubTotal = Quantity * UnitaryCost;
     }
+
+    //Need for EF Core
+    private TransactionItem() { }
 }

@@ -31,4 +31,7 @@ public class Item : AggregateRoot
         }
         Stock += quantityToAdd;
     }
+
+    //Need for EF Core
+    private Item() { }
 }

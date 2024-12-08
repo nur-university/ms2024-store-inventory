@@ -1,5 +1,6 @@
 ﻿using Inventory.Domain.Items;
 using Inventory.Infrastructure.DomainModel;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,10 +30,18 @@ namespace Inventory.Infrastructure.Repositories
             _dbContext.Item.Remove(obj);
         }
 
-        public async Task<Item> GetByIdAsync(Guid id)
+        public async Task<Item?> GetByIdAsync(Guid id, bool readOnly = false)
         {
-            return await _dbContext.Item.FindAsync(id);
+            if (readOnly)
+            {
+                return await _dbContext.Item.AsNoTracking().FirstOrDefaultAsync(i => i.Id == id);
+            }
+            else
+            {
+                return await _dbContext.Item.FindAsync(id);
+            }
         }
+
 
         public Task UpdateAsync(Item item)
         {

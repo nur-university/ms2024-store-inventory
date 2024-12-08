@@ -1,5 +1,6 @@
 ﻿using Inventory.Domain.Abstractions;
 using Inventory.Domain.Shared;
+using Inventory.Domain.Transactions.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -58,6 +59,12 @@ public class Transaction : AggregateRoot
         }
         Status = TransactionStatus.Completed;
         CompletedDate = DateTime.Now;
+
+        List<TransactionCompleted.TransactionCompletedDetail> detail = _items
+            .Select(i => new TransactionCompleted.TransactionCompletedDetail(i.ItemId, i.Quantity, i.UnitaryCost))
+            .ToList();
+
+        AddDomainEvent(new TransactionCompleted(Id, Type, detail));
     }
 
     public void Cancel()
@@ -100,4 +107,7 @@ public class Transaction : AggregateRoot
         TotalCost -= item.SubTotal;
         _items.Remove(item);
     }
+
+    //Need for EF Core
+    private Transaction(){ }
 }

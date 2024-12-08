@@ -1,12 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MediatR;
 
-namespace Inventory.Domain.Abstractions
+namespace Inventory.Domain.Abstractions;
+
+public abstract record DomainEvent : INotification
 {
-    public abstract class DomainEvent
+    public Guid Id { get; set; }
+    public DateTime OccuredOn { get; set; }
+
+    public DomainEvent()
     {
+        Id = Guid.NewGuid();
+        OccuredOn = DateTime.Now;   
     }
 }

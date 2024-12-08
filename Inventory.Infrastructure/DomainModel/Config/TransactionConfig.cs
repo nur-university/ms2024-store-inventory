@@ -19,6 +19,9 @@ namespace Inventory.Infrastructure.DomainModel.Config
             builder.ToTable("transaction");
             builder.HasKey(x => x.Id);
 
+            builder.Property(x => x.CreatorId)
+                .HasColumnName("userCreatorId");
+
             builder.Property(x => x.Id)
                 .HasColumnName("transactionId");
 
@@ -38,7 +41,7 @@ namespace Inventory.Infrastructure.DomainModel.Config
 
             builder.Property(x => x.Type)
                  .HasConversion(typeConverter)
-                 .HasColumnName("type");
+                 .HasColumnName("transactionType");
 
 
             var statusConverter = new ValueConverter<TransactionStatus, string>(
@@ -61,18 +64,21 @@ namespace Inventory.Infrastructure.DomainModel.Config
 
             builder.HasMany(typeof(TransactionItem), "_items");
 
-            //builder.Ignore("_domainEvents");
-            //builder.Ignore(x => x.DomainEvents);
+            builder.Ignore("_domainEvents");
+            builder.Ignore(x => x.DomainEvents);
             builder.Ignore(x => x.Items);
         }
 
         public void Configure(EntityTypeBuilder<TransactionItem> builder)
         {
-            builder.ToTable("transaccionItem");
+            builder.ToTable("transactionItem");
             builder.HasKey(x => x.Id);
 
             builder.Property(x => x.Id)
-                .HasColumnName("transaccionItemId");
+                .HasColumnName("transactionItemId");
+
+            builder.Property(x => x.ItemId)
+                .HasColumnName("itemId");
 
             var quantityConverter = new ValueConverter<TransactionQuantity, int>(
                 quantityValue => quantityValue.Value,
@@ -93,7 +99,7 @@ namespace Inventory.Infrastructure.DomainModel.Config
                 .HasConversion(costConverter);
 
             builder.Property(x => x.SubTotal)
-                .HasColumnName("cubTotal")
+                .HasColumnName("subTotal")
                 .HasConversion(costConverter);
         }
     }

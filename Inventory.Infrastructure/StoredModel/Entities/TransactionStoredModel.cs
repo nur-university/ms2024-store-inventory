@@ -1,11 +1,5 @@
-﻿using Inventory.Domain.Users;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Inventory.Infrastructure.StoredModel.Entities;
 
@@ -20,7 +14,7 @@ internal class TransactionStoredModel
     [Column("userCreatorId")]
     public Guid UserCreatorId { get; set; }
 
-    public User UserCreator { get; set; }
+    public UserStoredModel UserCreator { get; set; }
 
     [Required]
     [Column("transactionType")]
@@ -28,13 +22,13 @@ internal class TransactionStoredModel
     public string TransactionType { get; set; }
 
     [Required]
-    [Column("CreationDate")]
+    [Column("creationDate")]
     public DateTime CreationDate { get; set; }
 
-    [Column("CompletedDate")]
+    [Column("completedDate")]
     public DateTime? CompletedDate { get; set; }
 
-    [Column("CancelDate")]
+    [Column("cancelDate")]
     public DateTime? CancelDate { get; set; }
 
     [Required]

@@ -1,6 +1,8 @@
 ﻿using Inventory.Application;
 using Inventory.Domain.Abstractions;
 using Inventory.Domain.Items;
+using Inventory.Domain.Transactions;
+using Inventory.Domain.Users;
 using Inventory.Infrastructure.DomainModel;
 using Inventory.Infrastructure.Repositories;
 using Inventory.Infrastructure.StoredModel;
@@ -33,8 +35,9 @@ public static class Extensions
                     ServerVersion.AutoDetect(connectionString)));
 
         services.AddScoped<IItemRepository, ItemRepository>();
+        services.AddScoped<ITransactionRepository, TransactionRepository>();
+        services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
-
 
         services.AddAplication();
 
