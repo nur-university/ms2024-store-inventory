@@ -6,10 +6,7 @@ using System.Threading.Tasks;
 
 namespace Inventory.Domain.Abstractions;
 
-public abstract class AggregateRoot : Entity
+public interface IUnitOfWork
 {
-    
-    protected AggregateRoot(Guid id) : base(id)
-    {
-    }
+    Task CommitAsync(CancellationToken cancellationToken = default);
 }

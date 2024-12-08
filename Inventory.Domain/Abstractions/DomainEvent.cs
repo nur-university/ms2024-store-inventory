@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Inventory.Domain.Transactions;
-
-public enum TranactionType
+namespace Inventory.Domain.Abstractions
 {
-    Entry,
-    Exit
+    public abstract class DomainEvent
+    {
+    }
 }

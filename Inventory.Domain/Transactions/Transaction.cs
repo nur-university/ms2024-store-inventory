@@ -14,23 +14,25 @@ public class Transaction : AggregateRoot
     public DateTime CreationDate { get; private set; }
     public DateTime? CompletedDate { get; private set; }
     public DateTime? CancelDate { get; private set; }
-    public CostValue TotalCost { set; private get; }
+    public CostValue TotalCost { get; private set; }
 
     private List<TransactionItem> _items;
     public TransactionStatus Status { get; private set; }
+    public TransactionType Type { get; set; }
     public ICollection<TransactionItem> Items { 
         get {
             return _items;
         } 
     }
 
-    public Transaction(Guid creatorId) : base(Guid.NewGuid())
+    public Transaction(Guid creatorId, TransactionType type) : base(Guid.NewGuid())
     {
         CreatorId = creatorId;
         Status = TransactionStatus.Created;
         CreationDate = DateTime.Now;
         TotalCost = 0;
         _items = new List<TransactionItem>();
+        Type = type;
     }
 
     public void AddItem(Guid itemId, int quantity, decimal unitaryCost)
