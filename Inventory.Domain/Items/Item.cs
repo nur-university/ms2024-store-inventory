@@ -24,12 +24,13 @@ public class Item : AggregateRoot
 
     public void UpdateStockAndCost(int quantityToAdd, decimal unitaryCost)
     {
-        if(quantityToAdd > 0)
+        if (quantityToAdd > 0)
         {
-            CostValue newCost = (UnitaryCost * Stock + unitaryCost * quantityToAdd) / (Stock + quantityToAdd);
+            CostValue newCost = Math.Round(
+                (UnitaryCost * Stock + unitaryCost * quantityToAdd) / (Stock + quantityToAdd), 2);
             UnitaryCost = newCost;
+            Stock += quantityToAdd;
         }
-        Stock += quantityToAdd;
     }
 
     //Need for EF Core

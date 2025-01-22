@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Inventory.Application.Items.EventHanders
 {
-    internal class UpdateStockWhenTransactionIsCompleted : INotificationHandler<TransactionCompleted>
+    public class UpdateStockWhenTransactionIsCompleted : INotificationHandler<TransactionCompleted>
     {
         private readonly IItemRepository _itemRepository;
         private readonly IUnitOfWork _unitOfWork;
