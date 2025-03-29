@@ -21,16 +21,14 @@ internal class CreateTransactionHandler : IRequestHandler<CreateTransactionComma
     public CreateTransactionHandler(ITransactionFactory transactionFactory,
         ITransactionRepository transactionRepository,
         IUnitOfWork unitOfWork,
-        IItemRepository itemRepository)
-    {
+        IItemRepository itemRepository) {
         _transactionFactory = transactionFactory;
         _transactionRepository = transactionRepository;
         _unitOfWork = unitOfWork;
         _itemRepository = itemRepository;
     }
 
-    public async Task<Guid> Handle(CreateTransactionCommand request, CancellationToken cancellationToken)
-    {
+    public async Task<Guid> Handle(CreateTransactionCommand request, CancellationToken cancellationToken) {
 
         var transaction = request.Type switch
         {

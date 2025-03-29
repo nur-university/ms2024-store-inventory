@@ -22,7 +22,7 @@ public class TransactionController : ControllerBase
     {
         try
         {
-            var id =await _mediator.Send(command);
+            var id = await _mediator.Send(command);
             return Ok(id);
         }
         catch (Exception)
@@ -37,7 +37,7 @@ public class TransactionController : ControllerBase
     {
         try
         {
-            bool result =await _mediator.Send(command);
+            bool result = await _mediator.Send(command);
             return Ok(result);
         }
         catch (Exception)

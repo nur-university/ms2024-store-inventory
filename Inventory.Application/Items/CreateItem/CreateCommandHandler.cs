@@ -15,17 +15,15 @@ namespace Inventory.Application.Items.CreateItem
         private readonly IItemRepository _itemRepository;
         private readonly IUnitOfWork _unitOfWork;
 
-        public CreateCommandHandler(IItemFactory itemFactory, 
-            IItemRepository itemRepository, 
-            IUnitOfWork unitOfWork)
-        {
+        public CreateCommandHandler(IItemFactory itemFactory,
+            IItemRepository itemRepository,
+            IUnitOfWork unitOfWork) {
             _itemFactory = itemFactory;
             _itemRepository = itemRepository;
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<Guid> Handle(CreateItemCommand request, CancellationToken cancellationToken)
-        {
+        public async Task<Guid> Handle(CreateItemCommand request, CancellationToken cancellationToken) {
             var item = _itemFactory.Create(request.Id, request.ItemName);
 
             await _itemRepository.AddAsync(item);

@@ -14,17 +14,15 @@ internal class CompleteTransactionHandler : IRequestHandler<CompleteTransactionC
     private readonly ITransactionRepository _transactionRepository;
     private readonly IUnitOfWork _unitOfWork;
 
-    public CompleteTransactionHandler(ITransactionRepository transactionRepository, IUnitOfWork unitOfWork)
-    {
+    public CompleteTransactionHandler(ITransactionRepository transactionRepository, IUnitOfWork unitOfWork) {
         _transactionRepository = transactionRepository;
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<bool> Handle(CompleteTransactionCommand request, CancellationToken cancellationToken)
-    {
+    public async Task<bool> Handle(CompleteTransactionCommand request, CancellationToken cancellationToken) {
         var transaction = await _transactionRepository.GetByIdAsync(request.TransactionId);
 
-        if(transaction == null)
+        if (transaction == null)
         {
             throw new InvalidOperationException("Transaction not found");
         }

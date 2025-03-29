@@ -16,18 +16,16 @@ namespace Inventory.Application.Items.EventHanders
         private readonly IItemRepository _itemRepository;
         private readonly IUnitOfWork _unitOfWork;
 
-        public UpdateStockWhenTransactionIsCompleted(IItemRepository itemRepository, IUnitOfWork unitOfWork)
-        {
+        public UpdateStockWhenTransactionIsCompleted(IItemRepository itemRepository, IUnitOfWork unitOfWork) {
             _itemRepository = itemRepository;
             _unitOfWork = unitOfWork;
         }
 
-        public async Task Handle(TransactionCompleted domainEvent, CancellationToken cancellationToken)
-        {
+        public async Task Handle(TransactionCompleted domainEvent, CancellationToken cancellationToken) {
             foreach (var item in domainEvent.Details)
             {
                 var itemEntity = await _itemRepository.GetByIdAsync(item.ItemId);
-                if(itemEntity == null)
+                if (itemEntity == null)
                 {
                     continue;
                 }

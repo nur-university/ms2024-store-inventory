@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Inventory.Application.Transactions.GetTransaccionById
 {
-    public class TransactionDto 
+    public class TransactionDto
     {
         public Guid Id { get; set; }
         public DateTime CreationDate { get; set; }
