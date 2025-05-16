@@ -1,4 +1,6 @@
 ﻿using Inventory.Infrastructure.Persistence.StoredModel.Entities;
+using Joseco.DDD.Core.Abstractions;
+using Joseco.Outbox.EFCore.Persistence;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -18,6 +20,11 @@ namespace Inventory.Infrastructure.Persistence.StoredModel
         public StoredDbContext(DbContextOptions<StoredDbContext> options) : base(options)
         {
 
+        }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.AddOutboxModel<DomainEvent>();
         }
 
         public void Migrate()

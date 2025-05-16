@@ -13,6 +13,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Joseco.Outbox.EFCore.Persistence;
+using Joseco.Outbox.EFCore;
 
 namespace Inventory.Infrastructure.Extensions;
 
@@ -24,11 +26,9 @@ public static class DatabaseExtensions
         var dbConnectionString = databaseSettings.ConnectionString;
 
         services.AddDbContext<StoredDbContext>(context =>
-                context.UseMySql(dbConnectionString,
-                    ServerVersion.AutoDetect(dbConnectionString)));
+                context.UseNpgsql(dbConnectionString));
         services.AddDbContext<DomainDbContext>(context =>
-                context.UseMySql(dbConnectionString,
-                    ServerVersion.AutoDetect(dbConnectionString)));
+                context.UseNpgsql(dbConnectionString));
 
         services.AddScoped<IDatabase, StoredDbContext>();
 
@@ -36,6 +36,9 @@ public static class DatabaseExtensions
         services.AddScoped<ITransactionRepository, TransactionRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+        services.AddScoped<IOutboxDatabase<DomainEvent>, UnitOfWork>();
+        services.AddOutbox<DomainEvent>();
 
         return services;
     }

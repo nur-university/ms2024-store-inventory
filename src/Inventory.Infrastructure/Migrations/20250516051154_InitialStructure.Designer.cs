@@ -3,43 +3,43 @@ using System;
 using Inventory.Infrastructure.Persistence.StoredModel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
 namespace Inventory.Infrastructure.Migrations
 {
     [DbContext(typeof(StoredDbContext))]
-    [Migration("20241208205111_Add-Transaction-and-User")]
-    partial class AddTransactionandUser
+    [Migration("20250516051154_InitialStructure")]
+    partial class InitialStructure
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.8")
-                .HasAnnotation("Relational:MaxIdentifierLength", 64);
+                .HasAnnotation("ProductVersion", "9.0.4")
+                .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
+            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Inventory.Infrastructure.StoredModel.Entities.ItemStoredModel", b =>
+            modelBuilder.Entity("Inventory.Infrastructure.Persistence.StoredModel.Entities.ItemStoredModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)")
+                        .HasColumnType("uuid")
                         .HasColumnName("itemId");
 
                     b.Property<string>("ItemName")
                         .IsRequired()
                         .HasMaxLength(250)
-                        .HasColumnType("varchar(250)")
+                        .HasColumnType("character varying(250)")
                         .HasColumnName("itemName");
 
                     b.Property<int>("Stock")
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasColumnName("stock");
 
                     b.Property<decimal>("UnitaryCost")
@@ -51,19 +51,19 @@ namespace Inventory.Infrastructure.Migrations
                     b.ToTable("item");
                 });
 
-            modelBuilder.Entity("Inventory.Infrastructure.StoredModel.Entities.TransactionItemStoredModel", b =>
+            modelBuilder.Entity("Inventory.Infrastructure.Persistence.StoredModel.Entities.TransactionItemStoredModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)")
+                        .HasColumnType("uuid")
                         .HasColumnName("transactionItemId");
 
                     b.Property<Guid>("ItemId")
-                        .HasColumnType("char(36)")
+                        .HasColumnType("uuid")
                         .HasColumnName("itemId");
 
                     b.Property<int>("Quantity")
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasColumnName("quantity");
 
                     b.Property<decimal>("SubTotal")
@@ -71,7 +71,7 @@ namespace Inventory.Infrastructure.Migrations
                         .HasColumnName("subTotal");
 
                     b.Property<Guid>("TransactionId")
-                        .HasColumnType("char(36)")
+                        .HasColumnType("uuid")
                         .HasColumnName("transactionId");
 
                     b.Property<decimal>("UnitaryCost")
@@ -87,29 +87,29 @@ namespace Inventory.Infrastructure.Migrations
                     b.ToTable("transactionItem");
                 });
 
-            modelBuilder.Entity("Inventory.Infrastructure.StoredModel.Entities.TransactionStoredModel", b =>
+            modelBuilder.Entity("Inventory.Infrastructure.Persistence.StoredModel.Entities.TransactionStoredModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)")
+                        .HasColumnType("uuid")
                         .HasColumnName("transactionId");
 
                     b.Property<DateTime?>("CancelDate")
-                        .HasColumnType("datetime(6)")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("cancelDate");
 
                     b.Property<DateTime?>("CompletedDate")
-                        .HasColumnType("datetime(6)")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("completedDate");
 
                     b.Property<DateTime>("CreationDate")
-                        .HasColumnType("datetime(6)")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("creationDate");
 
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasMaxLength(25)
-                        .HasColumnType("varchar(25)")
+                        .HasColumnType("character varying(25)")
                         .HasColumnName("status");
 
                     b.Property<decimal>("TotalCost")
@@ -119,11 +119,11 @@ namespace Inventory.Infrastructure.Migrations
                     b.Property<string>("TransactionType")
                         .IsRequired()
                         .HasMaxLength(25)
-                        .HasColumnType("varchar(25)")
+                        .HasColumnType("character varying(25)")
                         .HasColumnName("transactionType");
 
                     b.Property<Guid>("UserCreatorId")
-                        .HasColumnType("char(36)")
+                        .HasColumnType("uuid")
                         .HasColumnName("userCreatorId");
 
                     b.HasKey("Id");
@@ -133,17 +133,17 @@ namespace Inventory.Infrastructure.Migrations
                     b.ToTable("transaction");
                 });
 
-            modelBuilder.Entity("Inventory.Infrastructure.StoredModel.Entities.UserStoredModel", b =>
+            modelBuilder.Entity("Inventory.Infrastructure.Persistence.StoredModel.Entities.UserStoredModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)")
+                        .HasColumnType("uuid")
                         .HasColumnName("userId");
 
                     b.Property<string>("FullName")
                         .IsRequired()
                         .HasMaxLength(250)
-                        .HasColumnType("varchar(250)")
+                        .HasColumnType("character varying(250)")
                         .HasColumnName("fullName");
 
                     b.HasKey("Id");
@@ -151,15 +151,51 @@ namespace Inventory.Infrastructure.Migrations
                     b.ToTable("user");
                 });
 
-            modelBuilder.Entity("Inventory.Infrastructure.StoredModel.Entities.TransactionItemStoredModel", b =>
+            modelBuilder.Entity("Joseco.Outbox.Contracts.Model.OutboxMessage<Joseco.DDD.Core.Abstractions.DomainEvent>", b =>
                 {
-                    b.HasOne("Inventory.Infrastructure.StoredModel.Entities.ItemStoredModel", "Item")
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("outboxId");
+
+                    b.Property<string>("Content")
+                        .HasColumnType("text")
+                        .HasColumnName("content");
+
+                    b.Property<string>("CorrelationId")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created");
+
+                    b.Property<bool>("Processed")
+                        .HasColumnType("boolean")
+                        .HasColumnName("processed");
+
+                    b.Property<DateTime?>("ProcessedOn")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("processedOn");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("type");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("outboxMessage", "outbox");
+                });
+
+            modelBuilder.Entity("Inventory.Infrastructure.Persistence.StoredModel.Entities.TransactionItemStoredModel", b =>
+                {
+                    b.HasOne("Inventory.Infrastructure.Persistence.StoredModel.Entities.ItemStoredModel", "Item")
                         .WithMany()
                         .HasForeignKey("ItemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Inventory.Infrastructure.StoredModel.Entities.TransactionStoredModel", "Transaction")
+                    b.HasOne("Inventory.Infrastructure.Persistence.StoredModel.Entities.TransactionStoredModel", "Transaction")
                         .WithMany("Items")
                         .HasForeignKey("TransactionId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -170,9 +206,9 @@ namespace Inventory.Infrastructure.Migrations
                     b.Navigation("Transaction");
                 });
 
-            modelBuilder.Entity("Inventory.Infrastructure.StoredModel.Entities.TransactionStoredModel", b =>
+            modelBuilder.Entity("Inventory.Infrastructure.Persistence.StoredModel.Entities.TransactionStoredModel", b =>
                 {
-                    b.HasOne("Inventory.Infrastructure.StoredModel.Entities.UserStoredModel", "UserCreator")
+                    b.HasOne("Inventory.Infrastructure.Persistence.StoredModel.Entities.UserStoredModel", "UserCreator")
                         .WithMany()
                         .HasForeignKey("UserCreatorId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -181,7 +217,7 @@ namespace Inventory.Infrastructure.Migrations
                     b.Navigation("UserCreator");
                 });
 
-            modelBuilder.Entity("Inventory.Infrastructure.StoredModel.Entities.TransactionStoredModel", b =>
+            modelBuilder.Entity("Inventory.Infrastructure.Persistence.StoredModel.Entities.TransactionStoredModel", b =>
                 {
                     b.Navigation("Items");
                 });

@@ -4,6 +4,8 @@ using Inventory.Domain.Transactions.Events;
 using Inventory.Domain.Users;
 using Microsoft.EntityFrameworkCore;
 using Joseco.DDD.Core.Abstractions;
+using Joseco.Outbox.EFCore.Persistence;
+using Joseco.Outbox.Contracts.Model;
 
 namespace Inventory.Infrastructure.Persistence.DomainModel
 {
@@ -12,6 +14,7 @@ namespace Inventory.Infrastructure.Persistence.DomainModel
         public DbSet<Item> Item { get; set; }
         public DbSet<Transaction> Transaction { get; set; }
         public DbSet<User> User { get; set; }
+        public DbSet<OutboxMessage<DomainEvent>> OutboxMessages { get; set; }
 
         public DomainDbContext(DbContextOptions<DomainDbContext> options) : base(options)
         {
@@ -19,6 +22,8 @@ namespace Inventory.Infrastructure.Persistence.DomainModel
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(DomainDbContext).Assembly);
+            modelBuilder.AddOutboxModel<DomainEvent>();
+
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Ignore<DomainEvent>();

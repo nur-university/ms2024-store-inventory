@@ -30,7 +30,7 @@ public static class ObservabilityExtensions
 
         services
             .AddHealthChecks()
-            .AddMySql(dbConnectionString)
+            .AddNpgSql(dbConnectionString)
             .AddRabbitMqHealthCheck();
 
         return services;

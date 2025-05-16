@@ -2,10 +2,13 @@
 using MediatR;
 using Joseco.DDD.Core.Abstractions;
 using System.Collections.Immutable;
+using Joseco.Outbox.EFCore.Persistence;
+using Microsoft.EntityFrameworkCore;
+using Joseco.Outbox.Contracts.Model;
 
 namespace Inventory.Infrastructure.Persistence
 {
-    internal class UnitOfWork : IUnitOfWork
+    internal class UnitOfWork : IUnitOfWork, IOutboxDatabase<DomainEvent>
     {
         private readonly DomainDbContext _dbContext;
         private readonly IMediator _mediator;
@@ -53,6 +56,11 @@ namespace Inventory.Infrastructure.Persistence
             }
 
                
+        }
+
+        public DbSet<OutboxMessage<DomainEvent>> GetOutboxMessages()
+        {
+            return _dbContext.OutboxMessages;
         }
     }
 }
